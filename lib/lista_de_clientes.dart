@@ -1,5 +1,4 @@
 import 'package:crudflutter/api_service.dart';
-import 'package:crudflutter/cadastro_cliente.dart';
 import 'package:flutter/material.dart';
 import 'cliente.dart';
 
@@ -22,7 +21,10 @@ class _ListaDeClientes extends State<ListaDeClientes> {
           final clientes = snapshot.data;
           if (clientes != null && clientes.isEmpty) {
             return const Center(
-              child: Text('Não há clientes cadastrados!'),
+              child: Text(
+                'Não há clientes cadastrados!',
+                style: TextStyle(fontSize: 20),
+              ),
             );
           }
           return ListView.builder(
@@ -37,7 +39,9 @@ class _ListaDeClientes extends State<ListaDeClientes> {
                         icon: const Icon(Icons.delete),
                         color: Colors.red,
                         onPressed: () async {
-                          await apiService.deletaCliente(cliente);
+                          setState(() {
+                            apiService.deletaCliente(cliente.id!);
+                          });
                         },
                       )),
                 );
