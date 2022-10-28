@@ -41,10 +41,11 @@ class CadastroCliente extends StatelessWidget {
                   final clienteCadastrado =
                       await apiService.cadastraCliente(cadastroCliente);
                   final snackBar = SnackBar(
+                      duration: const Duration(seconds: 2),
                       content: Text(
-                    '${clienteCadastrado.nome} foi cadastrado com sucesso!',
-                    style: const TextStyle(fontSize: 17),
-                  ));
+                        '${clienteCadastrado.nome} foi cadastrado com sucesso!',
+                        style: const TextStyle(fontSize: 17),
+                      ));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
@@ -54,10 +55,11 @@ class CadastroCliente extends StatelessWidget {
                 } catch (e) {
                   // Caso as informações sejam inválidas, retornará a mensagem de "Erro ao cadastrar".
                   final snackBar = SnackBar(
+                      duration: const Duration(seconds: 2),
                       content: Text(
-                    "Erro ao cadastrar!\n${e.toString()}",
-                    style: const TextStyle(fontSize: 17),
-                  ));
+                        "Erro ao cadastrar!\n${e.toString()}",
+                        style: const TextStyle(fontSize: 17),
+                      ));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               }

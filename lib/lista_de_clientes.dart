@@ -23,7 +23,7 @@ class _ListaDeClientes extends State<ListaDeClientes> {
             return const Center(
               child: Text(
                 'Não há clientes cadastrados!',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 19),
               ),
             );
           }
@@ -41,6 +41,14 @@ class _ListaDeClientes extends State<ListaDeClientes> {
                         onPressed: () async {
                           setState(() {
                             apiService.deletaCliente(cliente.id!);
+                            final snackBar = SnackBar(
+                                duration: const Duration(seconds: 2),
+                                content: Text(
+                                  '${cliente.nome} foi removido com sucesso!',
+                                  style: const TextStyle(fontSize: 17),
+                                ));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           });
                         },
                       )),
