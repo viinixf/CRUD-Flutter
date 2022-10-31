@@ -1,4 +1,5 @@
 import 'package:crudflutter/api_service.dart';
+import 'package:crudflutter/atualiza_cliente.dart';
 import 'package:flutter/material.dart';
 import 'cliente.dart';
 
@@ -38,22 +39,28 @@ class _ListaDeClientes extends State<ListaDeClientes> {
                     icon: const Icon(Icons.delete),
                     color: Colors.red,
                     onPressed: () async {
-                      setState(() {
-                        apiService.deletaCliente(cliente.id!);
-                        final snackBar = SnackBar(
-                            duration: const Duration(seconds: 2),
-                            content: Text(
-                              '${cliente.nome} foi removido com sucesso!',
-                              style: const TextStyle(fontSize: 17),
-                            ));
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      });
+                      apiService.deletaCliente(cliente.id!);
+                      final snackBar = SnackBar(
+                          duration: const Duration(seconds: 2),
+                          content: Text(
+                            '${cliente.nome} foi removido com sucesso!',
+                            style: const TextStyle(fontSize: 17),
+                          ));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      setState(() {});
                     },
                   ),
                   leading: IconButton(
+                    padding: const EdgeInsets.all(10.0),
                     iconSize: 24,
                     icon: const Icon(Icons.edit),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AtualizaCliente()));
+                      setState(() {});
+                    },
                   ),
                 );
               });

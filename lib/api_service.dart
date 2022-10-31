@@ -45,6 +45,19 @@ class ApiService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+
+    ///Retornando response pois a Future exige um tipo de retorno
+    return response;
+  }
+
+  Future<http.Response> atualizaCliente(int id) async {
+    var urlRequest = Uri.parse('$apiUrl/clientes/$id');
+    final http.Response response = await http.put(
+      urlRequest,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
     return response;
   }
 }
