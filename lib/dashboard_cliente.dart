@@ -39,8 +39,9 @@ class DashBoardCliente extends StatelessWidget {
           )
         ],
       ),
+
+      /// Manipula o corpo do Dashboard, neste body está sendo chamado o método ListaDeClientes no qual exibe os clientes cadastrados.
       body: const ListaDeClientes(),
-      // Manipula o corpo do Dashboard, neste body está sendo chamado o método ListaDeClientes no qual exibe os clientes cadastrados.
     );
   }
 }

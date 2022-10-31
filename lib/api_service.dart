@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 /// Classe que será utilizada para colocar os métodos HTTP.
 class ApiService {
-  //Declaração da variável localhost, no qual é armazenado o IP da máquina 192.168.1.181
+  ///Declaração da variável localhost, no qual é armazenado o IP da máquina 192.168.1.181
   var urlRequest = Uri.parse('$apiUrl/clientes');
   Future<List<Cliente>> getClientes() async {
     http.Response res = await http.get(urlRequest);
