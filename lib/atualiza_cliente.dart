@@ -1,14 +1,9 @@
 import 'package:crudflutter/dashboard_cliente.dart';
 import 'package:flutter/material.dart';
 
-class AtualizaCliente extends StatefulWidget {
+class AtualizaCliente extends StatelessWidget {
   const AtualizaCliente({super.key});
 
-  @override
-  State<AtualizaCliente> createState() => _AtualizaClienteState();
-}
-
-class _AtualizaClienteState extends State<AtualizaCliente> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +16,8 @@ class _AtualizaClienteState extends State<AtualizaCliente> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.done),
-            onPressed: () {
+            icon: const Icon(Icons.done),
+            onPressed: () async {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                     builder: (context) => const DashBoardCliente()),

@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 class ApiService {
   ///Declaração da variável localhost, no qual é armazenado o IP da máquina 192.168.1.181
   var urlRequest = Uri.parse('$apiUrl/clientes');
+
   Future<List<Cliente>> getClientes() async {
     http.Response res = await http.get(urlRequest);
 
@@ -50,14 +51,17 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> atualizaCliente(int id) async {
+  Future<Cliente> atualizaCliente(int id, Cliente cliente) async {
     var urlRequest = Uri.parse('$apiUrl/clientes/$id');
-    final http.Response response = await http.put(
-      urlRequest,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    return response;
+    final http.Response response = await http.put(urlRequest,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: cliente.toJson());
+    if (response.statusCode == 200) {
+      return Cliente.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Falha ao atualizar');
+    }
   }
 }
