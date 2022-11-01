@@ -1,5 +1,5 @@
 import 'package:crudflutter/api_service.dart';
-import 'package:crudflutter/atualiza_cliente.dart';
+import 'package:crudflutter/cadastro_cliente.dart';
 import 'package:flutter/material.dart';
 import 'cliente.dart';
 
@@ -56,9 +56,13 @@ class _ListaDeClientes extends State<ListaDeClientes> {
                     icon: const Icon(Icons.edit),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AtualizaCliente()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CadastroCliente(
+                            cliente: cliente,
+                          ),
+                        ),
+                      );
                       setState(() {});
                     },
                   ),

@@ -5,20 +5,39 @@ import 'package:flutter/material.dart';
 
 ///Classe Cadastro cliente.
 class CadastroCliente extends StatelessWidget {
-  //Controladores dos campos.
-  final TextEditingController _controladorNome = TextEditingController();
-  final TextEditingController _controladorIdade = TextEditingController();
-  final TextEditingController _controladorCpf = TextEditingController();
-  final TextEditingController _controladorTelefone = TextEditingController();
-
   final formKey = GlobalKey<FormState>();
-  final cadastroCliente = Cliente();
   final apiService = ApiService();
-  CadastroCliente({super.key});
+
+  final Cliente? cliente;
+
+  CadastroCliente({this.cliente, super.key});
+
+//Controladores dos campos.
+  // final TextEditingController _controladorNome = TextEditingController(text: cliente?.nome ?? '');
+  // final TextEditingController _controladorIdade = TextEditingController();
+  // final TextEditingController _controladorCpf = TextEditingController();
+  // final TextEditingController _controladorTelefone = TextEditingController();
 
   ///Criação do Widget.
   @override
   Widget build(BuildContext context) {
+    final TextEditingController controladorNome =
+        TextEditingController(text: cliente?.nome ?? '');
+    final TextEditingController controladorIdade =
+        TextEditingController(text: cliente?.idade.toString() ?? '');
+    final TextEditingController controladorCpf =
+        TextEditingController(text: cliente?.cpf ?? '');
+    final TextEditingController controladorTelefone =
+        TextEditingController(text: cliente?.telefone ?? '');
+    final cadastroCliente = cliente ?? Cliente();
+    String appBarTitle;
+    var isCdadastroCliente = cadastroCliente.id == null;
+    if (isCdadastroCliente) {
+      appBarTitle = 'Cadastro do cliente';
+    } else {
+      appBarTitle = 'Atualização do cliente';
+    }
+
     ///Widget Scaffold.
     return Scaffold(
       //Barra superior do aplicativo.
@@ -26,8 +45,7 @@ class CadastroCliente extends StatelessWidget {
         //Propriedade que centraliza o texto do AppBar.
         centerTitle: true,
         //Título do App bar.
-        title:
-            const Text('Cadastro do cliente', style: TextStyle(fontSize: 20)),
+        title: Text(appBarTitle, style: const TextStyle(fontSize: 20)),
         //Define a cor do AppBar.
         backgroundColor: Colors.green,
         actions: [
@@ -84,7 +102,7 @@ class CadastroCliente extends StatelessWidget {
                   decoration: const InputDecoration(
                       labelText: 'Nome:', labelStyle: TextStyle(fontSize: 17)),
                   style: const TextStyle(fontSize: 22),
-                  controller: _controladorNome,
+                  controller: controladorNome,
                   onSaved: (newValue) {
                     cadastroCliente.nome = newValue;
                   },
@@ -103,7 +121,7 @@ class CadastroCliente extends StatelessWidget {
                   decoration: const InputDecoration(
                       labelText: 'Idade:', labelStyle: TextStyle(fontSize: 17)),
                   style: const TextStyle(fontSize: 22),
-                  controller: _controladorIdade,
+                  controller: controladorIdade,
                   onSaved: (newValue) {
                     cadastroCliente.idade = int.tryParse(newValue!);
                   },
@@ -123,7 +141,7 @@ class CadastroCliente extends StatelessWidget {
                   decoration: const InputDecoration(
                       labelText: 'CPF:', labelStyle: TextStyle(fontSize: 17)),
                   style: const TextStyle(fontSize: 22),
-                  controller: _controladorCpf,
+                  controller: controladorCpf,
                   onSaved: (newValue) {
                     cadastroCliente.cpf = newValue;
                   },
@@ -144,7 +162,7 @@ class CadastroCliente extends StatelessWidget {
                       labelText: 'Telefone:',
                       labelStyle: TextStyle(fontSize: 17)),
                   style: const TextStyle(fontSize: 22),
-                  controller: _controladorTelefone,
+                  controller: controladorTelefone,
                   onSaved: (newValue) {
                     cadastroCliente.telefone = newValue;
                   },
