@@ -3,16 +3,17 @@ import 'package:crudflutter/cliente.dart';
 import 'package:crudflutter/dashboard_cliente.dart';
 import 'package:flutter/material.dart';
 
-///Classe Cadastro cliente.
+/// Classe Cadastro cliente.
 class CadastroCliente extends StatelessWidget {
+  /// Declarando a GlobalKey para fazer a validação dos campos do formulário
   final formKey = GlobalKey<FormState>();
   final apiService = ApiService();
 
+  /// Null Safety - depois do NullSafety todas as variáveis nunca poderam ser nulas
   final Cliente? cliente;
 
   CadastroCliente({this.cliente, super.key});
 
-  ///Criação do Widget.
   @override
   Widget build(BuildContext context) {
     /// Criação do controlador para recuperar os valores de TextField
@@ -25,37 +26,46 @@ class CadastroCliente extends StatelessWidget {
     final TextEditingController controladorTelefone =
         TextEditingController(text: cliente?.telefone ?? '');
 
-    final cadastroCliente = cliente ?? Cliente();
+    /// Trecho onde fará a validação se o cliente possui ID ou é nulo
+    /// Se possui ID, deverá ser Atualização do cliente, se não, será um novo Cadastro
+    final dadosClientes = cliente ?? Cliente();
     String appBarTitle;
-    var idCadastroCliente = cadastroCliente.id == null;
+    var idCadastroCliente = dadosClientes.id == null;
     if (idCadastroCliente) {
       appBarTitle = 'Cadastro do cliente';
     } else {
       appBarTitle = 'Atualização do cliente';
     }
 
-    ///Widget Scaffold.
     return Scaffold(
-      //Barra superior do aplicativo.
+      /// Barra superior do aplicativo.
       appBar: AppBar(
-        //Propriedade que centraliza o texto do AppBar.
+        /// Propriedade que centraliza o texto do AppBar.
         centerTitle: true,
-        //Título do App bar.
+
+        /// Título do App bar.
         title: Text(appBarTitle, style: const TextStyle(fontSize: 20)),
-        //Define a cor do AppBar.
+
+        /// Define a cor do AppBar.
         backgroundColor: Colors.green,
         actions: [
-          //Icone "Done" que ficará no canto direito da tela na barra superior.
+          /// Icone "Done" que ficará no canto direito da tela na barra superior.
           IconButton(
-            // Ao pressionar o "Done", fará a validação dos campos e exibirá um SnackBar caso cliente seja inserido.
+            /// Ao pressionar o "Done", fará a validação dos campos e exibirá um SnackBar caso cliente seja inserido.
             onPressed: () async {
+              /// Trecho que fará a validação dos campos TextFormField
+              /// Se o FormKey validade == true, irá salvar
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
                 try {
-                  final clienteCadastrado = cadastroCliente.id == null
-                      ? await apiService.cadastraCliente(cadastroCliente)
+                  /// Valida se os campos serão para cadastrar ou atualizar clientes
+                  /// Se o dadosClientes.id ser nulo, será um novo cadastro, se não, uma atualização
+                  final clienteCadastrado = dadosClientes.id == null
+
+                      /// Utilizando operador ternário para validação
+                      ? await apiService.cadastraCliente(dadosClientes)
                       : await apiService.atualizaCliente(
-                          cadastroCliente.id!, cadastroCliente);
+                          dadosClientes.id!, dadosClientes);
                   final snackBar = SnackBar(
                       duration: const Duration(seconds: 2),
                       content: Text(
@@ -102,7 +112,7 @@ class CadastroCliente extends StatelessWidget {
                   style: const TextStyle(fontSize: 22),
                   controller: controladorNome,
                   onSaved: (newValue) {
-                    cadastroCliente.nome = newValue;
+                    dadosClientes.nome = newValue;
                   },
                   validator: (nome) {
                     if (nome == null || nome.isEmpty) {
@@ -122,7 +132,7 @@ class CadastroCliente extends StatelessWidget {
                   style: const TextStyle(fontSize: 22),
                   controller: controladorIdade,
                   onSaved: (newValue) {
-                    cadastroCliente.idade = int.tryParse(newValue!);
+                    dadosClientes.idade = int.tryParse(newValue!);
                   },
                   maxLength: 3,
                   validator: (idade) {
@@ -142,7 +152,7 @@ class CadastroCliente extends StatelessWidget {
                   style: const TextStyle(fontSize: 22),
                   controller: controladorCpf,
                   onSaved: (newValue) {
-                    cadastroCliente.cpf = newValue;
+                    dadosClientes.cpf = newValue;
                   },
                   maxLength: 14,
                   validator: (cpf) {
@@ -163,7 +173,7 @@ class CadastroCliente extends StatelessWidget {
                   style: const TextStyle(fontSize: 22),
                   controller: controladorTelefone,
                   onSaved: (newValue) {
-                    cadastroCliente.telefone = newValue;
+                    dadosClientes.telefone = newValue;
                   },
                   maxLength: 15,
                   validator: (telefone) {

@@ -9,7 +9,7 @@ class ApiService {
   var urlRequest = Uri.parse('$apiUrl/clientes');
 
   ///Criação da função assíncrona para listar os clientes (MÉTODO POST)
-  Future<List<Cliente>> getClientes() async {
+  Future<List<Cliente>> mostraClientes() async {
     ///Criando objeto "res" do tipo Resposta(response), e atribuindo ao Http.get
     http.Response res = await http.get(urlRequest);
 
@@ -26,10 +26,9 @@ class ApiService {
 
   ///Criação da função assíncrona para inserção dos clientes (MÉTODO INSERT)
   Future<Cliente> cadastraCliente(Cliente cliente) async {
-    ///Instanciando response (criando objeto response)
     http.Response response;
 
-    ///Criando tratamento
+    ///Criação do tratamento do método Post
     try {
       response = await http.post(
         urlRequest,
