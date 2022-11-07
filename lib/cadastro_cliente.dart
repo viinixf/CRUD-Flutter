@@ -3,7 +3,6 @@ import 'package:crudflutter/cliente.dart';
 import 'package:crudflutter/dashboard_cliente.dart';
 import 'package:flutter/material.dart';
 
-/// Classe Cadastro cliente.
 class CadastroCliente extends StatelessWidget {
   /// Declarando a GlobalKey para fazer a validação dos campos do formulário
   final formKey = GlobalKey<FormState>();
@@ -27,7 +26,6 @@ class CadastroCliente extends StatelessWidget {
         TextEditingController(text: cliente?.telefone ?? '');
 
     /// Trecho onde fará a validação se o cliente possui ID ou é nulo
-    /// Se possui ID, deverá ser Atualização do cliente, se não, será um novo Cadastro
     final dadosClientes = cliente ?? Cliente();
     String appBarTitle;
     var idCadastroCliente = dadosClientes.id == null;
@@ -38,46 +36,52 @@ class CadastroCliente extends StatelessWidget {
     }
 
     return Scaffold(
-      /// Barra superior do aplicativo.
       appBar: AppBar(
-        /// Propriedade que centraliza o texto do AppBar.
         centerTitle: true,
-
-        /// Título do App bar.
         title: Text(appBarTitle, style: const TextStyle(fontSize: 20)),
-
-        /// Define a cor do AppBar.
         backgroundColor: Colors.green,
         actions: [
-          /// Icone "Done" que ficará no canto direito da tela na barra superior.
           IconButton(
             /// Ao pressionar o "Done", fará a validação dos campos e exibirá um SnackBar caso cliente seja inserido.
             onPressed: () async {
-              /// Trecho que fará a validação dos campos TextFormField
-              /// Se o FormKey validade == true, irá salvar
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
                 try {
-                  /// Valida se os campos serão para cadastrar ou atualizar clientes
-                  /// Se o dadosClientes.id ser nulo, será um novo cadastro, se não, uma atualização
+                  /// Utilizando operador ternário para validação
                   final clienteCadastrado = dadosClientes.id == null
-
-                      /// Utilizando operador ternário para validação
                       ? await apiService.cadastraCliente(dadosClientes)
                       : await apiService.atualizaCliente(
                           dadosClientes.id!, dadosClientes);
-                  final snackBar = SnackBar(
-                      duration: const Duration(seconds: 2),
-                      content: Text(
-                        '${clienteCadastrado.nome} foi cadastrado com sucesso!',
-                        style: const TextStyle(fontSize: 17),
-                      ));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (context) => const DashBoardCliente()),
-                    (route) => false,
-                  );
+                  //Valida se o SnackBar retornará "cadastrado" ou "atualizado"
+                  if (dadosClientes.id == null) {
+                    final snackBar = SnackBar(
+                        duration: const Duration(seconds: 2),
+                        content: Text(
+                          '${clienteCadastrado.nome} foi cadastrado com sucesso!',
+                          style: const TextStyle(fontSize: 17),
+                        ));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const DashBoardCliente()),
+                      (route) => false,
+                    );
+                  } else {
+                    final snackBar = SnackBar(
+                        duration: const Duration(seconds: 2),
+                        content: Text(
+                          '${clienteCadastrado.nome} foi atualizado com sucesso!',
+                          style: const TextStyle(fontSize: 17),
+                        ));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+
+                          ///Retorna para a tela inicial
+                          builder: (context) => const DashBoardCliente()),
+                      (route) => false,
+                    );
+                  }
                 } catch (e) {
                   // Caso as informações sejam inválidas, retornará a mensagem de "Erro ao cadastrar".
                   final snackBar = SnackBar(
@@ -130,6 +134,7 @@ class CadastroCliente extends StatelessWidget {
                   decoration: const InputDecoration(
                       labelText: 'Idade:', labelStyle: TextStyle(fontSize: 17)),
                   style: const TextStyle(fontSize: 22),
+                  keyboardType: TextInputType.number,
                   controller: controladorIdade,
                   onSaved: (newValue) {
                     dadosClientes.idade = int.tryParse(newValue!);

@@ -2,7 +2,7 @@ import 'package:crudflutter/api_service.dart';
 import 'package:crudflutter/cadastro_cliente.dart';
 import 'package:flutter/material.dart';
 import 'cliente.dart';
-import 'detalhes_clientes.dart';
+import 'detalhe_cliente.dart';
 
 class ListaDeClientes extends StatefulWidget {
   const ListaDeClientes({super.key});
