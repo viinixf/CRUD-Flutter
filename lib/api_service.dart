@@ -3,32 +3,29 @@ import 'package:crudflutter/cliente.dart';
 import 'package:crudflutter/utils/constantes.dart';
 import 'package:http/http.dart' as http;
 
-/// Classe que será utilizada para colocar os métodos HTTP.
+/// Classe reservada para os métodos HTTP
 class ApiService {
-  ///Declaração da variável localhost, no qual é armazenado o IP da máquina 192.168.1.181
   var urlRequest = Uri.parse('$apiUrl/clientes');
 
-  ///Criação da função assíncrona para listar os clientes (MÉTODO POST)
-  Future<List<Cliente>> mostraClientes() async {
-    ///Criando objeto "res" do tipo Resposta(response), e atribuindo ao Http.get
-    http.Response res = await http.get(urlRequest);
+  ///Função assíncrona para listar os clientes (MÉTODO POST)
+  Future<List<Cliente>> getListClientes() async {
+    http.Response response = await http.get(urlRequest);
 
-    ///Se o status da busca ser = 200, irá retornar a Lista de clientes cadastrados, caso contrário, retornará erro
-    if (res.statusCode == 200) {
-      List<dynamic> body = jsonDecode(res.body);
+    ///Valida o statusCode
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
       List<Cliente> clientes =
-          body.map((dynamic item) => Cliente.fromJson(item)).toList();
+          body.map((dynamic cliente) => Cliente.fromJson(cliente)).toList();
       return clientes;
     } else {
-      throw "Failed to load cases list";
+      throw "Falha ao carregar a lista";
     }
   }
 
-  ///Criação da função assíncrona para inserção dos clientes (MÉTODO INSERT)
-  Future<Cliente> cadastraCliente(Cliente cliente) async {
+  ///Função assíncrona para inserção dos clientes (MÉTODO INSERT)
+  Future<Cliente> cadastrarCliente(Cliente cliente) async {
     http.Response response;
 
-    ///Criação do tratamento do método Post
     try {
       response = await http.post(
         urlRequest,
@@ -36,7 +33,7 @@ class ApiService {
         body: cliente.toJson(),
       );
 
-      ///Condição para validar se a resposta do Status foi bem sucedida
+      ///Condição que valida se a resposta do Status foi bem sucedida
       if (response.statusCode > 300 && response.statusCode <= 500) {
         throw Exception('Erro ao cadastrar o cliente');
       }
@@ -46,8 +43,8 @@ class ApiService {
     }
   }
 
-  ///Criação da função assíncrona para deletar os clientes (método DELETE)
-  Future<http.Response> deletaCliente(int id) async {
+  ///Função assíncrona para deletar os clientes (método DELETE)
+  Future<http.Response> deletarCliente(int id) async {
     var urlRequest = Uri.parse('$apiUrl/clientes/$id');
     final http.Response response = await http.delete(
       urlRequest,
@@ -55,13 +52,11 @@ class ApiService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-
-    ///Retornando response pois a Future exige um tipo de retorno
     return response;
   }
 
-  ///Criação da função assíncrona para atualizar a lista de clientes (método PUT)
-  Future<Cliente> atualizaCliente(int id, Cliente cliente) async {
+  /// Função assíncrona para atualizar a lista de clientes (método PUT)
+  Future<Cliente> atualizarCliente(int id, Cliente cliente) async {
     var urlRequest = Uri.parse('$apiUrl/clientes/$id');
     final http.Response response = await http.put(urlRequest,
         headers: <String, String>{

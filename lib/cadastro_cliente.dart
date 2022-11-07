@@ -4,7 +4,7 @@ import 'package:crudflutter/dashboard_cliente.dart';
 import 'package:flutter/material.dart';
 
 class CadastroCliente extends StatelessWidget {
-  /// Declarando a GlobalKey para fazer a validação dos campos do formulário
+  /// GlobalKey utilizada para efetuar a validação dos campos de texto
   final formKey = GlobalKey<FormState>();
   final apiService = ApiService();
 
@@ -25,8 +25,9 @@ class CadastroCliente extends StatelessWidget {
     final TextEditingController controladorTelefone =
         TextEditingController(text: cliente?.telefone ?? '');
 
-    /// Trecho onde fará a validação se o cliente possui ID ou é nulo
+    /// Valida se o cliente possui ID ou é nulo para exibição do SnackBar
     final dadosClientes = cliente ?? Cliente();
+
     String appBarTitle;
     var idCadastroCliente = dadosClientes.id == null;
     if (idCadastroCliente) {
@@ -34,7 +35,6 @@ class CadastroCliente extends StatelessWidget {
     } else {
       appBarTitle = 'Atualização do cliente';
     }
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -42,15 +42,15 @@ class CadastroCliente extends StatelessWidget {
         backgroundColor: Colors.green,
         actions: [
           IconButton(
-            /// Ao pressionar o "Done", fará a validação dos campos e exibirá um SnackBar caso cliente seja inserido.
+            /// Valida os campos de textos e retorna o SnackBar
             onPressed: () async {
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
                 try {
-                  /// Utilizando operador ternário para validação
+                  ///Valida se é um novo cadastro ou uma atualização
                   final clienteCadastrado = dadosClientes.id == null
-                      ? await apiService.cadastraCliente(dadosClientes)
-                      : await apiService.atualizaCliente(
+                      ? await apiService.cadastrarCliente(dadosClientes)
+                      : await apiService.atualizarCliente(
                           dadosClientes.id!, dadosClientes);
                   //Valida se o SnackBar retornará "cadastrado" ou "atualizado"
                   if (dadosClientes.id == null) {
@@ -83,14 +83,9 @@ class CadastroCliente extends StatelessWidget {
                     );
                   }
                 } catch (e) {
-                  // Caso as informações sejam inválidas, retornará a mensagem de "Erro ao cadastrar".
-                  final snackBar = SnackBar(
-                      duration: const Duration(seconds: 2),
-                      content: Text(
-                        "Erro ao cadastrar!\n${e.toString()}",
-                        style: const TextStyle(fontSize: 17),
-                      ));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  const snackBarErro =
+                      SnackBar(content: Text("Erro ao cadastrar!"));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBarErro);
                 }
               }
             },
@@ -98,7 +93,6 @@ class CadastroCliente extends StatelessWidget {
           ),
         ],
       ),
-      //Contém o ScrollView no qual habilitará scrollar a interface e a distância entre o AppBar e o TextField.
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
@@ -109,7 +103,8 @@ class CadastroCliente extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.all(12.0),
                 ),
-                //TextField que conterá o nome junto com a validação.
+
+                ///Campo de texto que recebe o nome e valida se está correto
                 TextFormField(
                   decoration: const InputDecoration(
                       labelText: 'Nome:', labelStyle: TextStyle(fontSize: 17)),
@@ -125,11 +120,11 @@ class CadastroCliente extends StatelessWidget {
                     return null;
                   },
                 ),
-
                 const Padding(
                   padding: EdgeInsets.all(12.0),
                 ),
-                //TextField que conterá a idade junto com a validação.
+
+                ///Campo de texto que recebe a idade e valida se está correta
                 TextFormField(
                   decoration: const InputDecoration(
                       labelText: 'Idade:', labelStyle: TextStyle(fontSize: 17)),
@@ -150,7 +145,8 @@ class CadastroCliente extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.all(12.0),
                 ),
-                //TextField que conterá o CPF junto com a validação.
+
+                ///Campo de texto que recebe o CPF e valida se está correto
                 TextFormField(
                   decoration: const InputDecoration(
                       labelText: 'CPF:', labelStyle: TextStyle(fontSize: 17)),
@@ -170,7 +166,8 @@ class CadastroCliente extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.all(12.0),
                 ),
-                //TextField que conterá o telefone junto com a validação.
+
+                ///Campo de texto que recebe o telefone e valida se está correto
                 TextFormField(
                   decoration: const InputDecoration(
                       labelText: 'Telefone:',

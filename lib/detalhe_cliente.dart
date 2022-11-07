@@ -7,14 +7,13 @@ class DetalhesClientes extends StatefulWidget {
   const DetalhesClientes({super.key, required this.cliente});
 
   @override
-  State<DetalhesClientes> createState() => _DetalhesClientesState();
+  State<DetalhesClientes> createState() => _DetalheClienteState();
 }
 
-class _DetalhesClientesState extends State<DetalhesClientes> {
+///Retorna ao menu após selecionar o BackButton
+class _DetalheClienteState extends State<DetalhesClientes> {
   @override
   Widget build(BuildContext context) {
-    /// Criação do controlador para recuperar os valores de TextField
-
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -26,6 +25,8 @@ class _DetalhesClientesState extends State<DetalhesClientes> {
         title: const Text("Detalhes do cliente"),
         backgroundColor: Colors.green,
       ),
+
+      ///Define a imagem no CircleAvatar
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(

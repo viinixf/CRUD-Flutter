@@ -14,20 +14,15 @@ class ListaDeClientes extends StatefulWidget {
 class _ListaDeClientes extends State<ListaDeClientes> {
   @override
   Widget build(BuildContext context) {
-    /// Criação objeto do tipo ApiService
     ApiService apiService = ApiService();
 
-    /// Retornando RefreshIndicator
+    ///Define a validação da lista
     return RefreshIndicator(
       onRefresh: () async {},
       child: FutureBuilder<List<Cliente>>(
-        ///Future que chama o método getClientes da ApiService
-        future: apiService.mostraClientes(),
+        future: apiService.getListClientes(),
         builder: (context, snapshot) {
-          ///Final: atribuição única para váriaveis
           final clientesCadastradosPaginaInicial = snapshot.data;
-
-          ///Condição que valida se há clientes cadastrados para serem exibidos na página inicial
           if (clientesCadastradosPaginaInicial != null &&
               clientesCadastradosPaginaInicial.isEmpty) {
             return const Center(
@@ -38,13 +33,14 @@ class _ListaDeClientes extends State<ListaDeClientes> {
             );
           }
 
-          ///Retorna uma lista com os dados de nome e CPF do cliente
+          ///Retorna a lista de clientes cadastrados
           return ListView.builder(
               itemCount: clientesCadastradosPaginaInicial?.length ?? 0,
               itemBuilder: (context, index) {
                 final dadosClientesCadastrados =
                     clientesCadastradosPaginaInicial![index];
 
+                ///Ao pressionar, redireciona para os Detalhes do cliente selecionado
                 return ListTile(
                   onTap: () {
                     Navigator.push(
@@ -54,16 +50,17 @@ class _ListaDeClientes extends State<ListaDeClientes> {
                                   cliente: dadosClientesCadastrados,
                                 ))));
                   },
+
+                  ///Chama o método deleta cliente ao selecionar o Icon Button (Lixeira)
                   title: Text(dadosClientesCadastrados.nome!),
                   subtitle: Text(dadosClientesCadastrados.cpf!),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     color: Colors.red,
                     onPressed: () async {
-                      ///Chamando o método deleta cliente quando o IconButton "Delete" ser pressionado
-                      apiService.deletaCliente(dadosClientesCadastrados.id!);
+                      apiService.deletarCliente(dadosClientesCadastrados.id!);
 
-                      ///Após a remoção, retorna a mensagem de " (nome) + " removido com sucesso "!"
+                      ///Retorna o SnackBar informando que cliente foi removido
                       final snackBar = SnackBar(
                           duration: const Duration(seconds: 2),
                           content: Text(
@@ -72,24 +69,20 @@ class _ListaDeClientes extends State<ListaDeClientes> {
                           ));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-                      /// Método exclusivo ao Widgets do tipo Stateful, serve para reconstruir o Widget, com os novos valores
-                      /// É implementado pois o Widget precisa ser reconstruir após a remoção de um cliente
+                      ///Reconstrói a página
                       setState(() {});
                     },
                   ),
 
-                  ///Icone de editar
+                  ///Redireciona para a página de cadastro ao pressioanr o Icon Edit
                   leading: IconButton(
                     padding: const EdgeInsets.all(10.0),
                     iconSize: 24,
                     icon: const Icon(Icons.edit),
-
-                    ///Quando pressionado, será redirecionado para a página de CadastroClientes
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          /// dadosClientesCadastrados são passados neste parâmetro para retornar as informações ao pressionar editar
                           builder: (context) => CadastroCliente(
                             cliente: dadosClientesCadastrados,
                           ),
